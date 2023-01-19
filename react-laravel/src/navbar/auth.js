@@ -3,6 +3,7 @@ import Home from '../components/home';
 import Dashboard from '../components/dashboard';
 import AuthUser from '../components/AuthUser';
 import UpdateComplain from '../components/updateComplain';
+
 function Auth() {
     const {token,logout} = AuthUser();
     const logoutUser = () => {
@@ -31,7 +32,7 @@ function Auth() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/updateComplain" element={<UpdateComplain />} />
+                    <Route path="/updateComplain" element={<UpdateComplain />} />                    
                 </Routes>
             </div>
         </>

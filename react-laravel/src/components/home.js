@@ -1,20 +1,33 @@
 import { useState, useEffect } from "react";
 import AuthUser from "./AuthUser";
+import Verification from './Verification';
 
 export default function Home() {
   const { http, setToken } = AuthUser();
-  const [complainant_name, setComplainantName] = useState(null);
-  const [complainant_mobile_no, setComplainantMobileNo] = useState(null);
-  const [crime_type, setCrimeType] = useState("mobile");
-  const [imei_no, setIMEINo] = useState(null);
-  const [registration_no, setRegistrationNo] = useState(null);
-  const [engine_no, setEngineNo] = useState(null);
-  const [chasis_no, setChasisNo] = useState(null);
-  const [isError, setError] = useState(false);
+    const [complainant_name, setComplainantName] = useState(null);
+    const [complainant_mobile_no, setComplainantMobileNo] = useState(null);
+    const [crime_type, setCrimeType] = useState("mobile");
+    const [imei_no, setIMEINo] = useState(null);
+    const [registration_no, setRegistrationNo] = useState(null);
+    const [engine_no, setEngineNo] = useState(null);
+    const [chasis_no, setChasisNo] = useState(null);
+    const [isError, setError] = useState(false);
+
+  const initialSettings = () => {
+    setComplainantName('');
+    setComplainantMobileNo('');
+    setCrimeType("mobile");
+    setIMEINo('');
+    setRegistrationNo('');
+    setEngineNo('');
+    setChasisNo('');
+    setError(false)
+  }
   //   const [password, setPassword] = useState();
 
   useEffect(() => {
     // fetchAllUsers();
+    // initialSettings();
   });
 
   const fetchAllUsers = () => {
@@ -33,6 +46,8 @@ export default function Home() {
       engine_no,
       chasis_no
     );
+    // console.log(moment().format())
+
     const userData = complainant_name && complainant_mobile_no,
       mobileData = crime_type == "mobile" && imei_no,
       vehicleData =
@@ -65,6 +80,7 @@ export default function Home() {
       formData.append("crime_status", null);
       formData.append("file_path", null);
       formData.append("user_id", null);
+      // formData.append("created_at", moment().format());
 
       console.log("formData", [...formData]);
       // api call
@@ -72,6 +88,8 @@ export default function Home() {
         .post("/addcomplain", formData)
         .then((res) => {
           console.log(res.data);
+          alert('Your complain has beed registered, suppot person will call you in 24 hours')
+          initialSettings();
           // setToken(res.data.user,res.data.access_token);
         })
         .catch((err) => {
@@ -84,7 +102,7 @@ export default function Home() {
 
   return (
     <div className="row justify-content-center pt-5">
-      <div className="col-sm-6">
+      <div className="col-sm-5">
         <div className="card p-4">
           <h1 className="text-center mb-3">Register your Complain here </h1>
           <div className="form-group">
@@ -97,6 +115,7 @@ export default function Home() {
                 setComplainantName(e.target.value);
                 setError(false);
               }}
+              value={complainant_name}
               id="complainant_name"
             />
           </div>
@@ -110,6 +129,7 @@ export default function Home() {
                 setComplainantMobileNo(e.target.value);
                 setError(false);
               }}
+              value={complainant_mobile_no}
               id="complainant_mobile_no"
             />
           </div>
@@ -149,6 +169,7 @@ export default function Home() {
                   setIMEINo(e.target.value);
                   setError(false);
                 }}
+                value={imei_no}
                 id="imei_no"
               />
             </div>
@@ -164,6 +185,7 @@ export default function Home() {
                   setRegistrationNo(e.target.value);
                   setError(false);
                 }}
+                value={registration_no}
                 id="registration_no"
               />
             </div>
@@ -179,6 +201,7 @@ export default function Home() {
                   setEngineNo(e.target.value);
                   setError(false);
                 }}
+                value={engine_no}
                 id="engine_no"
               />
             </div>
@@ -194,6 +217,7 @@ export default function Home() {
                   setChasisNo(e.target.value);
                   setError(false);
                 }}
+                value={chasis_no}
                 id="chasis_no"
               />
             </div>
@@ -214,6 +238,7 @@ export default function Home() {
           </button>
         </div>
       </div>
+      <Verification/>
     </div>
   );
 }

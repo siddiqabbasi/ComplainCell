@@ -19,7 +19,7 @@ class ComplainController extends Controller
         $complain->complain_month=$req->input('complain_month');
         $complain->crime_type=$req->input('crime_type');
         $complain->imei_no=$req->input('imei_no');
-        $complain->location=$req->input('location');
+        // $complain->location=$req->input('location');
         $complain->make=$req->input('make');
         $complain->model=$req->input('model');
         $complain->color=$req->input('color');
@@ -75,5 +75,24 @@ class ComplainController extends Controller
     function getComplain($id){
         return Complain::find($id);
         // return $id;
+    }
+
+    function searchComplain(request $req){
+        if($req['imei_no']){
+            return Complain::where("imei_no", $req['imei_no'])->get();             
+        }else if($req['registration_no']){            
+            // User::where('registration_no', $req['registration_no'])->where(function($query) {
+            //     $query->where('email','jdoe@example.com')
+            //                 ->orWhere('email','johndoe@example.com');
+            // })->get();
+
+            return Complain::where("registration_no", $req['registration_no'])
+            ->where('engine_no', $req['engine_no'])
+            ->where('chasis_no', $req['chasis_no'])
+            ->get();
+            
+        }else {
+            return ["result"=>"nothing to search"];
+        }
     }
 }

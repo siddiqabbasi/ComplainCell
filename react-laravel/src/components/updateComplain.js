@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import AuthUser from "./AuthUser";
-import { useLocation  } from "react-router-dom";
+import { useLocation, useNavigate  } from "react-router-dom";
 
 export default function UpdateComplain() {
+  const navigate = useNavigate();
   const stateParams = useLocation();
-  const { http } = AuthUser();
+  const { http, user } = AuthUser();
+  const [complain_id, setComplainId] = useState(null);
   const [complainant_name, setComplainantName] = useState(null);
   const [complainant_mobile_no, setComplainantMobileNo] = useState(null);
   const [crime_type, setCrimeType] = useState("mobile");
@@ -33,11 +35,29 @@ export default function UpdateComplain() {
   }, []);
 
   const fetchUserDetail = () => {
-    // http.post("/me").then((res) => {
-    // //   setUserdetail(res.data);
-    // });
-    console.log('navigation', stateParams)
-    setComplainantName(stateParams.state.complainant_name)
+    console.log("navigation", stateParams);
+    setComplainId(stateParams.state.id);
+    setComplainantName(stateParams.state.complainant_name);
+    setComplainantMobileNo(stateParams.state.complainant_mobile_no);
+    setIMEINo(stateParams.state.imei_no);
+    setRegistrationNo(stateParams.state.registration_no);
+    setEngineNo(stateParams.state.engine_no);
+    setCrimeType(stateParams.state.crime_type);
+    setChasisNo(stateParams.state.chasis_no);
+    setOffenceDate(stateParams.state.offence_date);
+    setComplaindate(stateParams.state.complain_date);
+    setMake(stateParams.state.make);
+    setModel(stateParams.state.model);
+    setColor(stateParams.state.color);
+    setPoliceStation(stateParams.state.police_station);
+    setDistrict(stateParams.state.district);
+    setLocation(stateParams.state.location);
+    setIncidentDate(stateParams.state.incident_date);
+    setStatusCrimeType(stateParams.state.status_crime_type);
+    setFIRno(stateParams.state.fir_no);
+    setDateOfFir(stateParams.state.date_of_fir);
+    setCrimeStatus(stateParams.state.crime_status);
+    // setComplainantName(stateParams.state.complainant_name);
   };
 
   const submitForm = () => {
@@ -65,6 +85,7 @@ export default function UpdateComplain() {
       user_id
     );
     let formData = new FormData();
+    formData.append("id", complain_id);
     formData.append("complainant_name", complainant_name);
     formData.append("complainant_mobile_no", complainant_mobile_no);
     formData.append("offence_date", offence_date);
@@ -90,7 +111,8 @@ export default function UpdateComplain() {
     formData.append("date_of_fir", date_of_fir);
     formData.append("crime_status", crime_status);
     formData.append("file_path", null);
-    formData.append("user_id", null);
+    formData.append("user_id", user.id);
+    // formData.append("updated_at", moment().format())
 
     console.log("formData", [...formData]);
     // api call
@@ -98,6 +120,8 @@ export default function UpdateComplain() {
       .post("/updateComplain", formData)
       .then((res) => {
         console.log(res.data);
+        navigate(-1)
+        // stateParams.callBack();
         // setToken(res.data.user,res.data.access_token);
       })
       .catch((err) => {
@@ -134,6 +158,7 @@ export default function UpdateComplain() {
                 setComplainantMobileNo(e.target.value);
                 setError(false);
               }}
+              value={complainant_mobile_no}
               id="complainant_mobile_no"
             />
           </div>
@@ -148,6 +173,7 @@ export default function UpdateComplain() {
                   setIMEINo(e.target.value);
                   setError(false);
                 }}
+                value={imei_no}
                 id="imei_no"
               />
             </div>
@@ -163,6 +189,7 @@ export default function UpdateComplain() {
                   setRegistrationNo(e.target.value);
                   setError(false);
                 }}
+                value={registration_no}
                 id="registration_no"
               />
             </div>
@@ -171,13 +198,14 @@ export default function UpdateComplain() {
             <div className="form-group mt-3">
               <label>Engine No.:</label>
               <input
-                type="text"
+                type="number"
                 className="form-control"
                 placeholder="Enter you Engine number here"
                 onChange={(e) => {
                   setEngineNo(e.target.value);
                   setError(false);
                 }}
+                value={engine_no}
                 id="engine_no"
               />
             </div>
@@ -186,53 +214,57 @@ export default function UpdateComplain() {
             <div className="form-group mt-3">
               <label>Chasis No.:</label>
               <input
-                type="text"
+                type="number"
                 className="form-control"
                 placeholder="Enter you Chasis number here"
                 onChange={(e) => {
                   setChasisNo(e.target.value);
                   setError(false);
                 }}
+                value={chasis_no}
                 id="chasis_no"
               />
             </div>
           ) : null}
-          <div className="form-group">
+          {/* <div className="form-group">
             <label>Offence Date:</label>
             <input
-              type="name"
+              type="date"
               className="form-control"
               placeholder="Offence Date"
               onChange={(e) => {
                 setOffenceDate(e.target.value);
                 setError(false);
               }}
+              value={offence_date}
               id="offence_date"
             />
-          </div>
+          </div> */}
           <div className="form-group mt-3">
             <label>Complain Date:</label>
             <input
-              type="number"
+              type="date"
               className="form-control"
               placeholder="Complain Date"
               onChange={(e) => {
                 setComplaindate(e.target.value);
                 setError(false);
               }}
+              value={complain_date}
               id="complain_date"
             />
           </div>
           <div className="form-group mt-3">
             <label>Make:</label>
             <input
-              type="number"
+              type="text"
               className="form-control"
               placeholder="Make"
               onChange={(e) => {
                 setMake(e.target.value);
                 setError(false);
               }}
+              value={make}
               id="make"
             />
           </div>
@@ -246,6 +278,7 @@ export default function UpdateComplain() {
                 setModel(e.target.value);
                 setError(false);
               }}
+              value={model}
               id="model"
             />
           </div>
@@ -259,6 +292,7 @@ export default function UpdateComplain() {
                 setColor(e.target.value);
                 setError(false);
               }}
+              value={color}
               id="color"
             />
           </div>
@@ -272,6 +306,7 @@ export default function UpdateComplain() {
                 setPoliceStation(e.target.value);
                 setError(false);
               }}
+              value={police_station}
               id="police_station"
             />
           </div>
@@ -285,6 +320,7 @@ export default function UpdateComplain() {
                 setDistrict(e.target.value);
                 setError(false);
               }}
+              value={district}
               id="district"
             />
           </div>
@@ -298,25 +334,32 @@ export default function UpdateComplain() {
                 setLocation(e.target.value);
                 setError(false);
               }}
+              value={location}
               id="location"
             />
           </div>
           <div className="form-group mt-3">
             <label>Incident Date:</label>
             <input
-              type="text"
+              type="date"
               className="form-control"
               placeholder="Incident Date"
               onChange={(e) => {
                 setIncidentDate(e.target.value);
                 setError(false);
               }}
+              value={incident_date}
               id="incident_date"
             />
           </div>
           <div className="form-group mt-3">
             <label>Status Crime Type:</label>
-            <input
+            <select class="form-control" id="crime_status">
+              {["RECOVERED", "NOT RECOVERED"].map((status) => (
+                <option>{status}</option>
+              ))}
+            </select>
+            {/* <input
               type="text"
               className="form-control"
               placeholder="Status Crime Type"
@@ -324,8 +367,9 @@ export default function UpdateComplain() {
                 setStatusCrimeType(e.target.value);
                 setError(false);
               }}
+              value={status_crime_type}
               id="status_crime_type"
-            />
+            /> */}
           </div>
           <div className="form-group mt-3">
             <label>FIR No.:</label>
@@ -337,25 +381,32 @@ export default function UpdateComplain() {
                 setFIRno(e.target.value);
                 setError(false);
               }}
+              value={fir_no}
               id="fir_no"
             />
           </div>
           <div className="form-group mt-3">
             <label>Date of FIR:</label>
             <input
-              type="text"
+              type="date"
               className="form-control"
               placeholder="Date of FIR"
               onChange={(e) => {
                 setDateOfFir(e.target.value);
                 setError(false);
               }}
+              value={date_of_fir}
               id="date_of_fir"
             />
           </div>
           <div className="form-group mt-3">
             <label>Crime Status:</label>
-            <input
+            <select class="form-control" id="crime_status">
+              {["REPORTED", "UN REPORTED"].map((status) => (
+                <option>{status}</option>
+              ))}
+            </select>
+            {/* <input
               type="text"
               className="form-control"
               placeholder="Crime Status"
@@ -363,8 +414,9 @@ export default function UpdateComplain() {
                 setCrimeStatus(e.target.value);
                 setError(false);
               }}
+              value={crime_status}
               id="crime_status"
-            />
+            /> */}
           </div>
           {isError ? (
             <p

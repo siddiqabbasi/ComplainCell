@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     Route::get('list', [ComplainController::class,'list']);
     Route::delete('delete/{id}', [ComplainController::class,'delete']);
     Route::get('complain/{id}', [ComplainController::class,'getComplain']);
+    Route::post('searchcomplain/', [ComplainController::class,'searchComplain']);
     Route::post('updateComplain/', [ComplainController::class,'updateComplain']);
     Route::resource('users', UserController::class);
     Route::group(['middleware'=>'api'], function(){

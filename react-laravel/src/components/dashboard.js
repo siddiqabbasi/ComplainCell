@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 export default function Dashboard() {
   const { http } = AuthUser();
   const [allComplains, setComplainsData] = useState("");
+  const [showData, setShowData] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,31 +14,53 @@ export default function Dashboard() {
 
   const fetchComplainsDetail = () => {
     http.get("/list").then((res) => {
-      console.log(res);
+      // console.log(res);
       setComplainsData(res.data);
+      setShowData(res.data)
     });
   };
 
-  //   function renderElement() {
-  //     if (userdetail) {
-  //       return (
-  //         <div>
-  //           <h4>Name</h4>
-  //           <p>{userdetail.name}</p>
-  //           <h4>Email</h4>
-  //           <p>{userdetail.email}</p>
-  //         </div>
-  //       );
-  //     } else {
-  //       return <p>Loading.....</p>;
-  //     }
-  //   }
-
   const renderTable = () => {
-
-    if (allComplains) {
+    if (showData) {
       return (
         <div className="row justify-content-center pt-5">
+          <div className="row">
+            <div className="row col-md-6 ofset-4">
+              <div className="col-md-4">
+                <button
+                  type="button"
+                  onClick={() => {                    
+                    let mobileList = allComplains.filter((elem) => elem.crime_type == 'mobile')
+                    setShowData(mobileList)
+                  }}
+                  className="btn btn-primary mt-4"
+                >
+                  Mobile
+                </button>
+              </div>
+              <div className="col-md-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    let vehicleList = allComplains.filter((elem) => elem.crime_type == 'vehicle')
+                    setShowData(vehicleList)
+                  }}
+                  className="btn btn-primary mt-4"
+                >
+                  Vehicle
+                </button>
+              </div>
+              <div className="col-md-4">
+                <button
+                  type="button"
+                  onClick={() => setShowData(allComplains)}
+                  className="btn btn-primary mt-4"
+                >
+                  All Data
+                </button>
+              </div>
+            </div>
+          </div>
           <div className="table-responsive">
             <table className="table">
               <thead>
@@ -45,7 +68,7 @@ export default function Dashboard() {
                   <th>S. No.</th>
                   <th>Complainant Name</th>
                   <th>Complainant Mobile no.</th>
-                  <th>Offence Date</th>
+                  {/* <th>Offence Date</th> */}
                   <th>Complain Date</th>
                   <th>Crime Type</th>
                   <th>IMEI No.</th>
@@ -67,12 +90,12 @@ export default function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                {allComplains.map((complain, index) => (
+                {showData.map((complain, index) => (
                   <tr key={index}>
                     <td>{complain.id}</td>
                     <td>{complain.complainant_name}</td>
                     <td>{complain.complainant_mobile_no}</td>
-                    <td>{complain.offence_date}</td>
+                    {/* <td>{complain.offence_date}</td> */}
                     <td>{complain.complain_date}</td>
                     <td>{complain.crime_type}</td>
                     <td>{complain.imei_no}</td>
@@ -94,7 +117,9 @@ export default function Dashboard() {
                       <button
                         type="button"
                         className="btn btn-primary mt-4"
-                        onClick={() => navigate("/updateComplain", {state: complain})}
+                        onClick={() =>
+                          navigate("/updateComplain", { state: complain, callBack: () => {console.log('wapis chala gya')} })
+                        }
                       >
                         Edit
                       </button>
@@ -109,7 +134,7 @@ export default function Dashboard() {
     } else {
       return <p>Loading.....</p>;
     }
-  }
+  };
 
   return (
     <div>
